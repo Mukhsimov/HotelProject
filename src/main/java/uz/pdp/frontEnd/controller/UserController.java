@@ -1,18 +1,13 @@
 package uz.pdp.frontEnd.controller;
 
-import com.sun.tools.javac.Main;
 import uz.pdp.backend.entity.Booking;
 import uz.pdp.backend.entity.user.User;
 import uz.pdp.backend.entity.user.cl.Wallet;
 import uz.pdp.backend.enums.UserStatus;
-import uz.pdp.backend.service.book.BookingService;
-import uz.pdp.backend.service.book.BookingServiceImp;
 import uz.pdp.backend.service.mailing.MailingService;
 import uz.pdp.backend.service.user.UserService;
 import uz.pdp.backend.service.user.UserServiceImp;
 import uz.pdp.frontEnd.ConsoleUi;
-import uz.pdp.frontEnd.menus.AuthMenu;
-import uz.pdp.frontEnd.menus.UserMenu;
 import uz.pdp.frontEnd.utill.Context;
 import uz.pdp.frontEnd.utill.Scan;
 
