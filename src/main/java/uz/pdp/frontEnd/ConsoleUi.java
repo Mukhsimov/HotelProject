@@ -1,31 +1,18 @@
 package uz.pdp.frontEnd;
 
-
-import uz.pdp.backend.entity.hotel.Hotel;
-import uz.pdp.backend.entity.user.User;
-import uz.pdp.backend.enums.UserRole;
-import uz.pdp.backend.service.book.BookingService;
-import uz.pdp.backend.service.book.BookingServiceImp;
-import uz.pdp.backend.service.user.UserService;
-import uz.pdp.backend.service.user.UserServiceImp;
-import uz.pdp.frontEnd.menus.AdminMenu;
 import uz.pdp.frontEnd.menus.AuthMenu;
-import uz.pdp.frontEnd.menus.UserMenu;
 import uz.pdp.frontEnd.utill.Scan;
-
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class ConsoleUi {
-    public static final UserService userService = UserServiceImp.getInstance();
-    public static final BookingService bookingService = BookingServiceImp.getInstance();
-    public static User curUser;
+
 
     public static void main(String[] args) {
-        Hotel hotel = Hotel.getInstance();
-        Runtime.getRuntime().addShutdownHook(new Thread(hotel::saveHotelToFile));
+
+
 
         System.out.println("Welcome to Tashkent Hotel");
         while (true) {

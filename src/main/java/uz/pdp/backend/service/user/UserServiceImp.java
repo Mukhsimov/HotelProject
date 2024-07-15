@@ -1,13 +1,18 @@
 package uz.pdp.backend.service.user;
 
 import lombok.NonNull;
+import uz.pdp.backend.entity.Booking;
 import uz.pdp.backend.entity.user.User;
 import uz.pdp.backend.enums.Paths;
+import uz.pdp.backend.enums.UserStatus;
 import uz.pdp.backend.service.file.FileWriterAndLoader;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserServiceImp implements UserService {
     private static UserService userService;
@@ -25,8 +30,8 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void create(User user) {
-        List<User> users = writerAndLoader.fileLoader(User.class);
-        if (users == null) {
+        List<User> users = filter(user1 -> true);
+        if (users == null || users.isEmpty()) {
             users = new ArrayList<>();
             users.add(User.admin());
         }
@@ -36,7 +41,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public boolean update(User user) {
-        List<User> users = writerAndLoader.fileLoader(User.class);
+        List<User> users = new ArrayList<>(filter(user1 -> true));
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i).getID().equals(user.getID())) {
                 users.set(i, user);
@@ -49,68 +54,82 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User get(String ID) {
-        List<User> users = writerAndLoader.fileLoader(User.class);
-        for (User user : users) {
-            if (user.getID().equals(ID)) return user;
-        }
-        return null;
+        List<User> user = filter(temp -> temp.getID().equals(ID));
+        if (user == null || user.isEmpty()) return null;
+        return user.getFirst();
     }
+
+
+    private List<User> filter(Predicate<User> filter) {
+        List<User> users = writerAndLoader.fileLoader(User.class);
+        if (users == null || users.isEmpty()){
+            return new ArrayList<>(List.of(User.admin()));
+        }else return users.stream()
+                .filter(filter)
+                .toList();
+    }
+
 
     @Override
     public boolean delete(String ID) {
-        List<User> users = writerAndLoader.fileLoader(User.class);
-        for (User user : users) {
-            if (user.getID().equals(ID)) {
-                users.remove(user);
-                writerAndLoader.fileWrite(users);
-                return true;
-            }
-        }
-        return false;
+        List<User> users = filter(user1 -> true);
+        return users.removeIf(user -> user.getID().equals(ID));
     }
 
     @Override
     public List<User> getList() {
-        return writerAndLoader.fileLoader(User.class);
+        return filter(user1 -> true);
     }
 
 
     @Override
-    public User LogIn(String username, String password) {
-        List<User> userList = writerAndLoader.fileLoader(User.class);
-        if (userList == null) return null;
-        for (User user : userList) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) return user;
-        }
-        return null;
+    public User login(String email, String password) {
+        List<User> filter = filter(user -> (user.getEmail().equals(email) &&
+                                            user.getPassword().equals(password) &&
+                                            user.getStatus().equals(UserStatus.ACTIVE)));
+        if (filter == null || filter.isEmpty()  ) return null;
+        return filter.getFirst();
     }
 
 
     /*
-    * 200: valid username
-    * 510: already exist username
-    * 550: wrong username entered
-    * */
+     * 200: valid email
+     * 510: already exist email
+     * 550: wrong email entered
+     * */
     @Override
-    public int isValidUsername(String username) {
-        if (username.isEmpty() || username.isBlank() || username.contains(" ") ||
-            !Character.isAlphabetic(username.charAt(0)) ||
-            username.length() < 4)
-            return 550;
-
+    public boolean isValidEmail(String email) {
+        Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        Matcher matcher = EMAIL_PATTERN.matcher(email.trim());
+        if (!matcher.matches()) {
+            return false;
+        }
         List<User> userList = writerAndLoader.fileLoader(User.class);
-        if (userList == null) return 200;
+        if (userList == null) {
+            return true;
+        }
         for (User user : userList) {
-            if (user.getUsername().equals(username)) {
-                return 510;
+            if (user.getEmail().equals(email.trim())) {
+                return false;
             }
         }
-        return 200;
+        return true;
     }
 
     @Override
     public boolean isValidPassword(String password) {
-        return true;
+        Pattern PASSWORD_PATTERN = Pattern.compile(
+                "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,16}$"
+        );
+        if (password == null) {
+            return false;
+        }
+
+        Matcher matcher = PASSWORD_PATTERN.matcher(password);
+        return matcher.matches();
     }
 
 

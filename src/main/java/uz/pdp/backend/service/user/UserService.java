@@ -4,9 +4,9 @@ import uz.pdp.backend.entity.user.User;
 import uz.pdp.backend.service.BaseService;
 
 public interface UserService extends BaseService<User> {
-    User LogIn(String username, String password);
+    User login(String email, String password);
 
-    int isValidUsername(String username);
+    boolean isValidEmail(String email);
 
     boolean isValidPassword(String password);
 

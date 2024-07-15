@@ -5,15 +5,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;
 
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class FileWriterAndLoader<M> {
     private final Gson gson;
@@ -23,22 +22,20 @@ public class FileWriterAndLoader<M> {
         this.path = Path.of(path);
         gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .setDateFormat("dd.MM.yyyy")
+                .setDateFormat("dd.MM.yyy")
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .serializeNulls()
                 .create();
     }
 
-
     public void fileWrite(@NonNull List<M> mList) {
+        String json = gson.toJson(mList);
 
-        if (Files.exists(path)) {
-            String json = gson.toJson(mList);
-
-            try {
-                Files.writeString(path, json);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            Files.writeString(path, json);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -56,6 +53,4 @@ public class FileWriterAndLoader<M> {
         }
         return new ArrayList<>();
     }
-
-
 }

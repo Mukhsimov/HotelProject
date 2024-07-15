@@ -1,0 +1,24 @@
+[
+  {
+    "customerID": "399b3e5b-0636-4836-a6b8-16b5f0a2a806",
+    "floor": 2,
+    "room": 2,
+    "checkInDate": "2024-07-17",
+    "checkOutDate": "2024-07-20",
+    "status": "ACTIVE",
+    "isTemporary": false,
+    "fullName": null,
+    "ID": "da349568-1053-4b1f-841f-a75bca0bd820"
+  },
+  {
+    "customerID": null,
+    "floor": 1,
+    "room": 1,
+    "checkInDate": "2024-08-15",
+    "checkOutDate": "2024-10-25",
+    "status": "ACTIVE",
+    "isTemporary": true,
+    "fullName": "1234 12345t6ytgfds",
+    "ID": "bf2d5e14-b576-4524-a8e7-12e540e4656b"
+  }
+]

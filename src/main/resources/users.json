@@ -2,23 +2,23 @@
   {
     "firstName": null,
     "lastName": null,
-    "username": "Admin",
+    "email": "Admin",
     "password": "Admin",
     "role": "ADMIN",
     "wallet": null,
-    "ID": "4a0c2d9c-29f0-4fe3-b4c5-4221b87d1535"
+    "status": "ACTIVE",
+    "ID": "a9428390-5b92-4408-9ac5-55a3bc6f2605"
   },
   {
-    "firstName": "123",
-    "lastName": "123",
-    "username": "123",
-    "password": "123",
+    "firstName": "user",
+    "lastName": "user",
+    "email": "009.deagle@gmail.com",
+    "password": "Bob12345",
     "role": "CUSTOMER",
     "wallet": {
-      "USD": 0.0,
-      "EUR": 0.0,
       "UZS": 0.0
     },
-    "ID": "7d759185-3c47-48e8-9f46-f81c22276bf2"
+    "status": "ACTIVE",
+    "ID": "399b3e5b-0636-4836-a6b8-16b5f0a2a806"
   }
 ]

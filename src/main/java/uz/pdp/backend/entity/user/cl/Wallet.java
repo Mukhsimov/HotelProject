@@ -1,65 +1,37 @@
 package uz.pdp.backend.entity.user.cl;
 
+import lombok.Getter;
+
+@Getter
 public class Wallet {
-    private Double USD;
-    private Double EUR;
+
     private Double UZS;
 
     public Wallet() {
-        this.EUR = 0.0;
-        this.USD = 0.0;
+
         this.UZS = 0.0;
     }
 
-    public void depositUSD(Double usd) {
-        USD += usd;
-    }
-
-    public void depositEUR(Double eur) {
-        EUR += eur;
-    }
-
     public void depositUZS(Double uzs) {
-        USD += uzs;
-    }
-
-    public boolean withdrawUSD(Double usd) {
-        if (USD >= usd) {
-            USD -= usd;
-            return true;
-        } else {
-            return false;
+        if (uzs < 50000){
+           throw new RuntimeException("you cannot top up your balance with less than 50,000 UZS");
         }
+        UZS += uzs;
+
     }
 
-    public boolean withdrawEUR(Double eur) {
-        if (EUR >= eur) {
-            EUR -= eur;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public boolean withdrawUZS(Double uzs) {
+    public void withdrawUZS(Double uzs) {
+        if (uzs < 0) throw  new RuntimeException("Incorrect amount entered");
         if (UZS >= uzs) {
             UZS -= uzs;
-            return true;
         } else {
-            return false;
+            throw new RuntimeException("Incorrect amount entered");
         }
     }
 
-    public boolean payUSD(Double amount) {
-        return withdrawUSD(amount);
-    }
 
-    public boolean payEUR(Double amount) {
-        return withdrawEUR(amount);
-    }
-
-    public boolean payUZS(Double amount) {
-        return withdrawUZS(amount);
+    public void payUZS(Double uzs) {
+         withdrawUZS(uzs);
     }
 
 }
