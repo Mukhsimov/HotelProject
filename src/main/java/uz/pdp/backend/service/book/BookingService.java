@@ -9,7 +9,9 @@ import java.util.function.Predicate;
 public interface BookingService extends BaseService<Booking> {
 
     List<Booking> getUserBooks(String userID);
+
     List<Booking> getUserActiveBooks(String userID);
+
     List<Booking> getUserHistory(String userID);
 
     List<Booking> getRoomBookings(int room, int floor);

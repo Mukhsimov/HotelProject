@@ -4,7 +4,7 @@ import lombok.extern.java.Log;
 import uz.pdp.backend.entity.Booking;
 import uz.pdp.backend.entity.hotel.Hotel;
 import uz.pdp.backend.enums.BookingStatus;
-import uz.pdp.backend.enums.Paths;
+import uz.pdp.backend.enums.Constants;
 import uz.pdp.backend.service.file.FileWriterAndLoader;
 import uz.pdp.frontEnd.utill.Context;
 
@@ -21,7 +21,7 @@ public class BookingServiceImp implements BookingService {
     private static BookingService bookingService;
 
     public BookingServiceImp() {
-        this.writerAndLoader = new FileWriterAndLoader<>(Paths.BOOKING_PATH);
+        this.writerAndLoader = new FileWriterAndLoader<>(Constants.BOOKING_PATH);
     }
 
     public static BookingService getInstance() {
@@ -40,7 +40,7 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public boolean update(Booking booking) {
-        List<Booking> bookings = filterBooking(temp -> true);
+        List<Booking> bookings = new ArrayList<>(filterBooking(temp -> true));
         for (int i = 0; i < bookings.size(); i++) {
             if (bookings.get(i).getID().equals(booking.getID())) {
                 bookings.set(i, booking);
@@ -74,7 +74,9 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public List<Booking> getUserBooks(String userID) {
-        return filterBooking(book -> book.getCustomerID().equals(userID));
+        List<Booking> userBooks = filterBooking(book -> book.getCustomerID().equals(userID));
+        if (userBooks == null) return new ArrayList<>();
+        return userBooks;
     }
 
 
@@ -133,29 +135,46 @@ public class BookingServiceImp implements BookingService {
             log.log(Level.WARNING, "room {0} out of bounds", booking.getRoom());
             return;
         }
-        if (booking.getCheckInDate().isBefore(LocalDate.now())) {
+        if (booking.getCheckInDate().isBefore(LocalDate.now())){
             throw new RuntimeException("you cannot book passed days!");
         }
-        if (booking.getCheckInDate().isAfter(booking.getCheckOutDate())) {
+        if (booking.getCheckInDate().isAfter(booking.getCheckOutDate())){
             throw new RuntimeException("start date should be before end date!");
         }
-        List<Booking> earliestBookings = getRoomBookings(booking.getRoom(), booking.getFloor());
+        List<Booking> earliestBookings = getRoomBookings(booking.getFloor(), booking.getRoom());
+        if ( earliestBookings == null || earliestBookings.isEmpty()){
+            return;
+        }
         if (earliestBookings
                 .stream()
                 .anyMatch(temp -> {
-                    String customerID = temp.getCustomerID();
                     LocalDate fromDate = temp.getCheckInDate();
                     LocalDate toDate = temp.getCheckOutDate();
-                    if (booking.getCheckInDate().isAfter(fromDate) && booking.getCheckInDate().isBefore(toDate))
+                    if (booking.getCheckInDate().isAfter(fromDate) && booking.getCheckOutDate().isBefore(toDate))
                         return true;
-                    if (booking.getCheckOutDate().isBefore(toDate) && booking.getCheckOutDate().isBefore(fromDate)) {
+                    if (booking.getCheckInDate().isBefore(toDate) && booking.getCheckOutDate().isBefore(fromDate)){
                         return true;
                     }
-                    return booking.getCheckInDate().isBefore(fromDate) && booking.getCheckOutDate().isAfter(toDate);
+                    if (booking.getCheckInDate().isBefore(fromDate) && booking.getCheckOutDate().isAfter(toDate)){
+                        return true;
+                    }
+                    return false;
                 })) {
+
             throw new RuntimeException("This date already taken by another user");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

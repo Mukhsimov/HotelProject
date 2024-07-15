@@ -28,6 +28,7 @@ public class BookingController {
         if (Context.getUser().getRole().equals(UserRole.ADMIN)) {
             booking.setFullName(Scan.getStr("enter full name of user"));
             booking.setTemporary(true);
+            booking.setCustomerID("");
 
         } else {
             booking.setCustomerID(Context.getUser().getID());
@@ -48,6 +49,7 @@ public class BookingController {
         booking.setStatus(BookingStatus.ACTIVE);
         bookingService.checkBooking(booking);
         bookingService.create(booking);
+        System.out.println("room is booked");
     } //    admin/user
 
 
@@ -128,8 +130,8 @@ public class BookingController {
         if (activeBookings.isEmpty()) {
             System.out.println("active bookings are not yet available");
         } else {
-            showBooks(activeBookings);
             System.out.println("Active Bookings");
+            showBooks(activeBookings);
         }
     }   //  admin/User
 

@@ -1,9 +1,7 @@
 package uz.pdp.backend.service.user;
 
-import lombok.NonNull;
-import uz.pdp.backend.entity.Booking;
 import uz.pdp.backend.entity.user.User;
-import uz.pdp.backend.enums.Paths;
+import uz.pdp.backend.enums.Constants;
 import uz.pdp.backend.enums.UserStatus;
 import uz.pdp.backend.service.file.FileWriterAndLoader;
 
@@ -25,7 +23,7 @@ public class UserServiceImp implements UserService {
     }
 
     private UserServiceImp() {
-        this.writerAndLoader = new FileWriterAndLoader<>(Paths.USERS_PATH);
+        this.writerAndLoader = new FileWriterAndLoader<>(Constants.USERS_PATH);
     }
 
     @Override

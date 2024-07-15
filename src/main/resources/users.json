@@ -12,8 +12,8 @@
   {
     "firstName": "user",
     "lastName": "user",
-    "email": "009.deagle@gmail.com",
-    "password": "Bob12345",
+    "email": "user",
+    "password": "user",
     "role": "CUSTOMER",
     "wallet": {
       "UZS": 0.0
